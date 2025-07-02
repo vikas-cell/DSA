@@ -13,7 +13,6 @@ class Solution {
             }
         }
         if(fresh==0) return 0;
-        System.out.println(fresh);
         int maxtime = 0;
         while(q.size()>0){
             int [] mat = q.poll();
@@ -42,7 +41,6 @@ class Solution {
             }
             maxtime = Math.max(maxtime,t);
         }
-        System.out.print(fresh);
         if(fresh!=0) return -1;
         return maxtime;
     }

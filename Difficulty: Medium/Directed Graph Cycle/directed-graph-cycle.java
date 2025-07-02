@@ -1,8 +1,9 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
+// import java.util.ArrayList;
+// import java.util.LinkedList;
+// import java.util.Queue;
 
 class Solution {
+    public boolean ans;
     public boolean isCyclic(int V, int[][] edges) {
         ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
         for (int i = 0; i < V; i++) {
@@ -14,36 +15,27 @@ class Solution {
             int b = edges[i][1];
             adj.get(a).add(b);
         }
+        ans = false;
+        boolean [] visit = new boolean[V];
+        boolean [] path = new boolean[V];
         
-        int[] indegree = new int[V];
-        
-        for (int i = 0; i < adj.size(); i++) {
-            for (int j : adj.get(i)) {
-                indegree[j]++;
+        for(int i=0;i<V;i++){
+            if(!visit[i]){
+                dfs(i,adj,path,visit);
             }
         }
-        
-        ArrayList<Integer> ans = new ArrayList<>();
-        Queue<Integer> q = new LinkedList<>();
-        
-        for (int i = 0; i < V; i++) {
-            if (indegree[i] == 0) {
-                q.add(i);
+        return ans;
+    }
+    public void dfs(int i,ArrayList<ArrayList<Integer>> adj,boolean [] path,boolean [] visit){
+        visit[i] = true;
+        path[i] = true;
+        for(int elem:adj.get(i)){
+            if(path[elem]){
+                ans = true;
+                return;
             }
+            if(!visit[elem]) dfs(elem,adj,path,visit);
         }
-        
-        while (!q.isEmpty()) {
-            int curr = q.poll();
-            ans.add(curr);
-            
-            for (int elem : adj.get(curr)) {
-                indegree[elem]--;
-                if (indegree[elem] == 0) {
-                    q.add(elem);
-                }
-            }
-        }
-        
-        return ans.size() < V;
+        path[i] = false;
     }
 }

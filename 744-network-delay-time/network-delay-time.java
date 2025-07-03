@@ -28,10 +28,8 @@ class Solution {
                 }
             }
         }
-        for(int i=0;i<V;i++) System.out.print(dist[i]+" ");
         int ans = Integer.MIN_VALUE;
         for(int i=0;i<V;i++) ans = Math.max(ans,dist[i]);
-        System.out.print(ans);
         if(ans==Integer.MAX_VALUE) return -1;
         return ans;
     }

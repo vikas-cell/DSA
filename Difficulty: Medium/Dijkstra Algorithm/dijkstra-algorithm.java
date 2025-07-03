@@ -10,31 +10,25 @@ class Solution {
             al.get(a).add(new int[]{b,c});
             al.get(b).add(new int[]{a,c});
         }
-        int [] ans = new int[V];
-        Queue<int []> q = new LinkedList<>();
-        for(int i=0;i<V;i++) ans[i] = Integer.MAX_VALUE;
-        ans[src] = 0;
+        int [] dist = new int[V];
+        for(int i=0;i<V;i++) dist[i] = Integer.MAX_VALUE;
+        dist[src] = 0;
+        PriorityQueue<int []> pq = new PriorityQueue<>((a,b)->a[1]-b[1]);
+        pq.offer(new int[]{src,0});
         
-        for(int [] mat:al.get(src)){
-            int e = mat[0];
-            int c = mat[1];
-            ans[e] = c;
-            q.add(new int[]{e,c});
-        }
-        
-        while(q.size()>0){
-            int [] pair = q.poll();
-            int e = pair[0];
-            int c = pair[1];
-            for(int [] mat:al.get(e)){
-                int ed = mat[0];
-                int cc = mat[1];
-                if(ed!=src && c+cc<ans[ed]){
-                    ans[ed] = c+cc;
-                    q.add(new int[]{ed,c+cc});
+        while(pq.size()>0){
+            int [] p = pq.poll();
+            int u = p[0];
+            int d_u = p[1];
+            for(int [] mat:al.get(u)){
+                int v = mat[0];
+                int cost = mat[1];
+                if(dist[u]+cost<dist[v]){
+                    dist[v] = dist[u]+cost;
+                    pq.offer(new int[]{v, dist[v]});
                 }
             }
         }
-        return ans;
+        return dist;
     }
 }

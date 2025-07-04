@@ -18,6 +18,8 @@ class Solution {
             double [] pair = pq.poll();
             double d = pair[0];
             int u = (int)pair[1];
+
+            if(u==end_node) return d;
             for(double [] mat:adj.get(u)){
                 double cost = mat[1];
                 int v =(int) mat[0];

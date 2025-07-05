@@ -1,35 +1,48 @@
 class Solution {
-    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
-        ArrayList<ArrayList<double []>> adj = new ArrayList<>();
-        for(int i=0;i<n;i++) adj.add(new ArrayList<>());
-        for(int i=0;i<edges.length;i++){
-            int a = edges[i][0];
-            int b = edges[i][1];
-            double c = succProb[i];
-            adj.get(a).add(new double[]{b,c});
-            adj.get(b).add(new double[]{a,c});
+   public class Pair implements Comparable<Pair>{
+        int node;
+        double cost;
+        Pair(int node,double cost){
+            this.node = node;
+            this.cost = cost;
         }
-        double [] prob = new double[n];
-        Arrays.fill(prob,0);
-        PriorityQueue<double []> pq = new PriorityQueue<>((a,b)->Double.compare(b[0],a[0]));
-        prob[start_node] = 1.0;
-        pq.offer(new double[]{1.0,start_node});
+        public int compareTo(Pair p){
+           return Double.compare(p.cost, this.cost);
+      }
+    }
+    public double maxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
+        for(int i=0;i<n;i++) adj.add(new ArrayList<>());
+
+        for(int i=0;i<edges.length;i++){
+            int u = edges[i][0];
+            int v = edges[i][1];
+            double cost = succProb[i];
+            adj.get(u).add(new Pair(v,cost));
+            adj.get(v).add(new Pair(u,cost));
+        }
+
+        double [] dist = new double[n];
+        Arrays.fill(dist,0);
+        dist[start_node] = 1;
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        pq.add(new Pair(start_node,1));
+
         while(pq.size()>0){
-            double [] pair = pq.poll();
-            double d = pair[0];
-            int u = (int)pair[1];
+            Pair p = pq.poll();
+            int u = p.node;
+            double cost_u = p.cost;
+            
+            for(Pair curr:adj.get(u)){
+                int v = curr.node;
+                double cost_v = curr.cost;
 
-            if(u==end_node) return d;
-            for(double [] mat:adj.get(u)){
-                double cost = mat[1];
-                int v =(int) mat[0];
-                if(cost*prob[u]>prob[v]){
-                    prob[v] = cost*prob[u];
-                    pq.offer(new double[]{prob[v],v});
+                if(dist[v]<cost_v*cost_u){
+                    dist[v] = cost_v*cost_u;
+                    pq.offer(new Pair(v,dist[v]));
                 }
-
             }
-        } 
-        return prob[end_node];
+        }
+        return dist[end_node];
     }
 }

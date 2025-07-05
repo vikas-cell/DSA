@@ -1,51 +1,66 @@
 class Solution {
-    public int minimumEffortPath(int[][] heights) {
-        int low = 0;
-        int high = heights[0][0];
-        for(int i=0;i<heights.length;i++){
-            for(int j=0;j<heights[0].length;j++){
-                high = Math.max(high,heights[i][j]);
-            }
+    public class Triplet implements Comparable<Triplet>{
+        int row;
+        int col;
+        int effort;
+        Triplet(int row,int col,int effort){
+            this.row=row;
+            this.col=col;
+            this.effort=effort;
         }
-        int ans = 0;
-        while(low<=high){
-            int mid = low+(high-low)/2;
-            if(helper(mid,heights)){
-                ans = mid;
-                high = mid-1;
-            }
-            else low = mid+1;
+
+        public int compareTo(Triplet t){
+            if(this.effort==t.effort) return this.row-t.row;
+            return Integer.compare(this.effort,t.effort);
         }
-        return ans;
     }
-    public boolean helper(int effort,int [][] nums){
-        int n = nums.length; int m = nums[0].length;
-        int [][] visit = new int[n][m];
-        Queue<int [] > q = new LinkedList<>();
-        q.offer(new int[]{0,0});
-        visit[0][0]=1;
-        while(q.size()>0){
-            int [] p = q.poll();
-            int i = p[0];
-            int j = p[1];
-            if(i>0 && visit[i-1][j]==0 && Math.abs(nums[i][j]-nums[i-1][j])<=effort){
-                q.add(new int[]{i-1,j});
-                visit[i-1][j] = 1;
+    public int minimumEffortPath(int[][] arr) {
+        int m = arr.length; int n = arr[0].length;
+        int [][] dist = new int[m][n];
+        for(int i=0;i<m;i++) for(int j=0;j<n;j++) dist[i][j] = Integer.MAX_VALUE;
+        dist[0][0] = 0;
+        PriorityQueue<Triplet> pq = new PriorityQueue<>();
+        pq.add(new Triplet(0,0,0));
+
+        while(pq.size()>0){
+            Triplet t = pq.poll();
+            int row = t.row; int col = t.col; int effort = t.effort;
+            if(row==m-1 && col==n-1) break;
+
+            if(row>0){// up
+                int e = Math.abs(arr[row][col]-arr[row-1][col]);
+                e = Math.max(e,effort);
+                if(e<dist[row-1][col]){
+                   dist[row-1][col] = e;
+                   pq.add(new Triplet(row-1,col,e));
+                }
             }
-            if(i<n-1 && visit[i+1][j]==0 && Math.abs(nums[i][j]-nums[i+1][j])<=effort){
-                q.add(new int[]{i+1,j});
-                visit[i+1][j] = 1;
+
+            if(col>0){//left
+                int e = Math.abs(arr[row][col]-arr[row][col-1]);
+                e = Math.max(e,effort);
+                if(e<dist[row][col-1]){
+                   dist[row][col-1] = e;
+                   pq.add(new Triplet(row,col-1,e));
+                }
             }
-            if(j>0 && visit[i][j-1]==0 && Math.abs(nums[i][j]-nums[i][j-1])<=effort){
-                q.add(new int[]{i,j-1});
-                visit[i][j-1] = 1;
+            if(row<m-1){//down
+                int e = Math.abs(arr[row][col]-arr[row+1][col]);
+                e = Math.max(e,effort);
+                if(e<dist[row+1][col]){
+                   dist[row+1][col] = e;
+                   pq.add(new Triplet(row+1,col,e));
+                }
             }
-            if(j<m-1 && visit[i][j+1]==0 && Math.abs(nums[i][j]-nums[i][j+1])<=effort){
-                q.add(new int[]{i,j+1});
-                visit[i][j+1] = 1;
+            if(col<n-1){//right
+                int e = Math.abs(arr[row][col]-arr[row][col+1]);
+                e = Math.max(e,effort);
+                if(e<dist[row][col+1]){
+                   dist[row][col+1] = e;
+                   pq.add(new Triplet(row,col+1,e));
+                }
             }
         }
-        if(visit[n-1][m-1]==1) return true;
-        return false;
+        return dist[m-1][n-1];
     }
 }

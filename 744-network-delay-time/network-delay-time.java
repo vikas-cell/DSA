@@ -20,7 +20,7 @@ class Solution {
             int [] p = pq.poll();
             int u = p[0];
             int dist_u = p[1];
-
+            if(dist_u>dist[u]) continue;
             for(int [] mat:adj.get(u)){
                 int v = mat[0];
                 int cost = mat[1];

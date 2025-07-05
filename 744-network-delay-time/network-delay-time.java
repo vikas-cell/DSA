@@ -24,8 +24,8 @@ class Solution {
             for(int [] mat:adj.get(u)){
                 int v = mat[0];
                 int cost = mat[1];
-                if(dist[u]+cost<dist[v]){
-                    dist[v] = dist[u]+cost;
+                if(dist_u+cost<dist[v]){
+                    dist[v] = dist_u+cost;
                     pq.offer(new int[]{v,dist[v]});
                 }
             }

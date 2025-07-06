@@ -28,7 +28,7 @@ class Solution {
             visit[node] = true;
 
             for(int i=0;i<n;i++){
-                if(i==parent || i==node) continue;
+                // if(i==parent || i==node) continue;
                 if(visit[i]) continue;
 
                 int x1 = points[node][0]; int y1 = points[node][1];

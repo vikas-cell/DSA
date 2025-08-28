@@ -1,12 +1,8 @@
 class Solution {
-    public int[][] sortMatrix(int[][] grid) {
-        
+    public int[][] sortMatrix(int[][] grid) { 
         int n = grid.length;
-
-        // ArrayList<ArrayList<Integer>> al = new ArrayList<>();
-        // for(int i=0;i<n;i++) al.add(new ArrayList<>());
-
         int count = 1;
+
         while(count<n){
             ArrayList<Integer> al = new ArrayList<>();
             int i=0;int j=count;
@@ -40,6 +36,7 @@ class Solution {
             }
             count++;
         }
-     return grid;
+
+       return grid;
     }
 }
